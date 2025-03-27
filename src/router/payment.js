@@ -19,7 +19,6 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
 			amount: membershipAmount[membershipType] * 100,
 			currency: "INR",
 			receipt: "receipt#1",
-			partial_payment: false,
 			notes: {
 				firstName,
 				lastName,
@@ -59,8 +58,8 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 		const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
 		const webhookBody = req.body;
 		// req.get / req.headers  --> for taking headers from request
-		const webhookSignature = req.get("X-Razorpay-Signature");
-		console.log("sign" + ebhookSignature);
+		const webhookSignature = req.headers["X-Razorpay-Signature"];
+		console.log("sign" + webhookSignature);
 
 		const isWebhookValid = validateWebhookSignature(
 			JSON.stringify(webhookBody),
