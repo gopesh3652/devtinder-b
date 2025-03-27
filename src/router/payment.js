@@ -67,11 +67,15 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 			webhookSecret
 		);
 
+		console.log("hi");
+
 		if (!isWebhookValid) {
-			res.status(400).json({
+			return res.status(400).json({
 				message: "webhook signature is invalid",
 			});
 		}
+
+		console.log("bye");
 
 		// update payment status in DB
 		const paymentDetails = req.body.payload.payment.entity;
@@ -81,6 +85,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 		payment.status = paymentDetails.status;
 		await payment.save();
 		console.log(paymentDetails);
+		console.log(payment);
 
 		// update user to premium
 		const user = await User.findOne({
@@ -98,11 +103,11 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 
 		// return success reaponse to razorpay
 		return res.status(200).json({
-			messgae: "webhook received successfully.",
+			message: "webhook received successfully.",
 		});
 	} catch (err) {
 		return res.status(400).json({
-			messgae: err.message,
+			message: err.message,
 		});
 	}
 });
