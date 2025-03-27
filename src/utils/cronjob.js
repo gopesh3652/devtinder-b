@@ -21,7 +21,6 @@ cron.schedule("00 08 * * *", async () => {
 		const listOfEmails = [
 			...new Set(pendingRequests.map((req) => req.toUserId.emailId)),
 		];
-		console.log(listOfEmails);
 
 		for (const email of listOfEmails) {
 			// send email
@@ -30,8 +29,6 @@ cron.schedule("00 08 * * *", async () => {
 					"New friend request pedding for: " + email,
 					"There are so many pending requests pending, please login to gopesh.shop and accept or reject the requests."
 				);
-
-				console.log(res);
 			} catch (err) {
 				console.error(err);
 			}
