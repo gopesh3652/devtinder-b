@@ -22,7 +22,6 @@ dotenv.config();
 require("./utils/cronjob");
 
 const PORT = process.env.PORT || 3002;
-// const PORT = 3002;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -36,8 +35,10 @@ app.use("/", paymentRouter);
 connectDB()
 	.then(() => {
 		console.log("connection to database established successfully....");
-		app.listen(PORT, "0.0.0.0", () => {
-			console.log(`Server is successfully listening on http://0.0.0.0:${PORT}`);
+		app.listen(PORT, () => {
+			console.log(
+				`Server is successfully listening on http://localhost:${PORT}`
+			);
 		});
 	})
 	.catch((err) => {

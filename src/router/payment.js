@@ -51,19 +51,17 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
 	}
 });
 
-// Apply express.raw() for the webhook route to get the raw body
 paymentRouter.post("/payment/webhook", async (req, res) => {
 	try {
-		const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
+		const webhookBody = JSON.stringify(req.body);
 		const webhookSignature = req.get("X-Razorpay-Signature");
-		const webhookBody = req.body;
+		const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
 
-		// Log the incoming request for debugging
-		console.log("Webhook received:", req.body);
+		console.log(req.body);
 
 		// Validate the webhook signature using the raw body
 		const isWebhookValid = validateWebhookSignature(
-			webhookBody, // Raw body as a string
+			webhookBody,
 			webhookSignature,
 			webhookSecret
 		);
@@ -78,7 +76,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 		}
 
 		// Parse the body manually after validation
-		const paymentDetails = webhookBody.payload.payment.entity;
+		const paymentDetails = req.body.payload.payment.entity;
 
 		// Find and update the payment in the database
 		const payment = await Payment.findOne({
@@ -86,7 +84,6 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 		});
 
 		if (!payment) {
-			console.log("Payment not found for orderId:", paymentDetails.order_id);
 			return res.status(404).json({
 				message: "Payment not found",
 			});
@@ -95,7 +92,6 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 		payment.paymentId = paymentDetails.id;
 		payment.status = paymentDetails.status;
 		await payment.save();
-		console.log("Payment updated:", payment);
 
 		// Update user to premium only if payment is captured
 		if (payment.status === "captured") {
@@ -104,9 +100,10 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 				user.isPremium = true;
 				user.membershipType = payment.notes.membershipType;
 				await user.save();
-				console.log("User updated to premium:", user._id);
 			} else {
-				console.log("User not found for userId:", payment.userId);
+				return res.status(404).json({
+					message: "User not found",
+				});
 			}
 		}
 
