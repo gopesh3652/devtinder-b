@@ -59,6 +59,9 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 		const webhookBody = req.body;
 		// req.get / req.headers  --> for taking headers from request
 		const webhookSignature = req.get("X-Razorpay-Signature");
+		console.log("webhookSecret: " + webhookSecret);
+		console.log("webhookBody: " + webhookBody);
+		console.log("webhookSignature: " + webhookSignature);
 
 		const isWebhookValid = validateWebhookSignature(
 			JSON.stringify(webhookBody),
@@ -66,6 +69,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 			webhookSecret
 		);
 
+		console.log("isWebhookValid: " + isWebhookValid);
 		console.log("hi");
 
 		if (!isWebhookValid) {
