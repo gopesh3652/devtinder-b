@@ -35,7 +35,7 @@ app.use("/", paymentRouter);
 connectDB()
 	.then(() => {
 		console.log("connection to database established successfully....");
-		app.listen(PORT, () => {
+		app.listen(PORT, "0.0.0.0", () => {
 			console.log(
 				`Server is successfully listening on http://localhost:${PORT}`
 			);
