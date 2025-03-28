@@ -59,7 +59,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 		const webhookBody = req.body;
 
 		// Log the incoming request for debugging
-		console.log("Webhook received:", req.body.toString());
+		console.log("Webhook received:", req.body);
 
 		// Validate the webhook signature using the raw body
 		const isWebhookValid = validateWebhookSignature(
