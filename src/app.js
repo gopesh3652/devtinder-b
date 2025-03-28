@@ -13,7 +13,7 @@ const app = express();
 
 app.use(
 	cors({
-		origin: "https://devtinder-f-57qa.vercel.app",
+		origin: "https://devtinder-f.vercel.app",
 		credentials: true,
 	})
 );
