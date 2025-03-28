@@ -70,9 +70,6 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 			});
 		}
 
-		console.log(req.path);
-		console.log("webhookSignature:\t" + isWebhookValid);
-
 		// Parse the body manually after validation
 		const paymentDetails = req.body.payload.payment.entity;
 
